@@ -1,0 +1,30 @@
+{% extends 'books/main_template.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}Add Category{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Add Category</h3>
+                     </div>
+                     <div class="card-body">
+                         <form method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+
+                            <input class='btn btn-primary btn-lg' type="submit" name="Add Category" value="Add Category">
+                         </form>
+                     </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

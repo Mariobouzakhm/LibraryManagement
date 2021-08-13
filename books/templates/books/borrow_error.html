@@ -1,0 +1,18 @@
+{% extends 'books/main_template.html' %}
+
+{% block title %}Borrow Error{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row" style="margin-top: 10px;">
+            <h3>Book has already been borrowed.</h3>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <a class='btn btn-warning' href="{% url 'home' %}">Back to dashboard</a>
+        </div>
+
+    </div>
+
+{% endblock %}

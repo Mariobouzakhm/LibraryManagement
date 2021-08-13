@@ -1,0 +1,58 @@
+{% extends 'books/main_template.html' %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block content %}
+
+    <style>
+        .card-content {
+            width: 80%;
+            margin: 1% auto;
+        }
+
+
+        .sandro {
+            background-color: #8b15e6
+        }
+
+    </style>
+
+    <div class="card-content">
+        <div class="row">
+            <div class="col">
+                <div class="card bg-info text-white">
+                    <div class="card-header text-center">
+                        <h5>Number of Books/Editions</h5>
+
+                    </div>
+                    <div class="card-body text-center ">
+                        <h4>{{ books_count }}/{{ editions_count }}</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card sandro text-white">
+                    <div class="card-header text-center">
+                        <h5>Number of Books Borrowed</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4>{{ borrowed_count }}</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card bg-info text-white">
+                    <div class="card-header text-center ">
+                        <h5>Number of Books Due Today</h5>
+                    </div>
+                    <div class="card-body text-center ">
+                        <h4>{{ due_today }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
