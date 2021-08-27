@@ -34,8 +34,8 @@
             <div class="col-sm-5">
                 <div class="card">
                     <div class="card-body">
-                        <h6>Authors: {{ book.authors|join:", " }}</h6>
-                        <h6>Categories: {{ book.categories|join:", " }}</h6>
+                        <h6>Authors: {{ book.authors.all|join:", " }}</h6>
+                        <h6>Categories: {{ book.categories.all|join:", " }}</h6>
                     </div>
                 </div>
             </div>
@@ -52,6 +52,7 @@
                         <th scope="col">ISBN</th>
                         <th scope="col">Status</th>
                         <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,6 +67,7 @@
                             {% else %}
                                 <td><a href="{% url 'return' edition.id %}" class="btn btn-danger">Return</a></td>
                             {% endif %}
+                            <td><a href="{% url 'edition_details' edition.id %}" class="btn btn-primary">Details</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -24,6 +24,16 @@ class BookForm(ModelForm):
     )
 
 
+class CustomerForm(ModelForm):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+
+        widgets = {
+            'date_of_birth': DatePicker()
+        }
+
+
 class AuthorForm(ModelForm):
     class Meta:
         model = Author
@@ -45,6 +55,11 @@ class EditionForm(ModelForm):
         model = BookEdition
         fields = '__all__'
         exclude = ['status']
+
+
+class QBorrowReturnForm(forms.Form):
+    book_edition_id = forms.IntegerField(label='Quick Borrow/Return: ', min_value=0,
+                                         widget=forms.TextInput(attrs={'placeholder': 'Book Edition #'}))
 
 
 class BorrowForm(ModelForm):

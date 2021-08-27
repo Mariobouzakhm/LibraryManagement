@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from .models import Book, BookEdition, BorrowReceipt
-from .forms import BookForm, BorrowForm, EditionForm, ReturnForm, AuthorForm, CategoryForm
+from .filters import BookFilter
+from .models import Book, BookEdition, BorrowReceipt, Customer
+from .forms import BookForm, BorrowForm, EditionForm, ReturnForm, AuthorForm, CategoryForm\
+    , QBorrowReturnForm, CustomerForm
 
 import datetime
 
@@ -13,18 +15,44 @@ def home(request):
     books_borrowed = BorrowReceipt.objects.all().filter(return_receipt=None).count()
     due_today = BorrowReceipt.objects.all().filter(date_to_return=datetime.date.today()).count()
 
+    borrow_return_form = QBorrowReturnForm()
+
     context = {'books_count': books_count, 'editions_count': editions_count, 'borrowed_count': books_borrowed,
-               'due_today': due_today}
+               'due_today': due_today, 'renew_form': borrow_return_form}
+
+    if request.method == 'GET':
+        borrow_return_form = QBorrowReturnForm(request.GET)
+
+        if borrow_return_form.is_valid():
+            book_edition_id = borrow_return_form.cleaned_data.get("book_edition_id")
+            book_edition = BookEdition.objects.all().filter(id=book_edition_id)
+
+            if len(book_edition) > 0:
+                if book_edition[0].status == 'AVAILABLE':
+                    return redirect('borrow', book_edition_id)
+
+                else :
+                    return redirect('return', book_edition_id)
 
     return render(request, 'books/home.html', context)
 
 
 def books(request):
     book_list = Book.objects.all()
+    book_filter = BookFilter(request.GET, queryset=book_list)
+    book_list = book_filter.qs
 
-    context = {'books_list': book_list}
+    context = {'books_list': book_list, 'book_filter': book_filter}
 
     return render(request, 'books/books.html', context)
+
+
+def customers(request):
+    customer_list = Customer.objects.all()
+
+    context = {'customer_list': customer_list}
+
+    return render(request, 'books/customers.html', context)
 
 
 def book_details(request, pk):
@@ -33,6 +61,23 @@ def book_details(request, pk):
 
     context = {'book': book, 'editions': editions}
     return render(request, 'books/book.html', context)
+
+
+def edition_details(request, pk):
+    edition = BookEdition.objects.get(id=pk)
+    borrow_receipts = BorrowReceipt.objects.filter(book_edition=edition)
+
+    context = {'edition': edition, 'borrow_receipts': borrow_receipts}
+    return render(request, 'books/edition_details.html', context)
+
+
+def customer_details(request, pk):
+    customer = Customer.objects.get(id=pk)
+    borrowed_books = BorrowReceipt.objects.filter(customer=customer)
+
+    context = {'customer': customer, 'borrowed_books': borrowed_books}
+
+    return render(request, 'books/customer.html', context)
 
 
 def add_book(request):
@@ -97,6 +142,18 @@ def add_edition(request, pk):
     return render(request, 'books/add_edition.html', context)
 
 
+def add_customer(request):
+    form = CustomerForm()
+
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+
+        if form.is_valid():
+            customer = form.save()
+
+            return redirect('home')
+
+
 def borrow(request, pk):
     edition = BookEdition.objects.get(id=pk)
 
@@ -120,6 +177,14 @@ def borrow(request, pk):
     context = {'form': form, 'edition': edition}
 
     return render(request, 'books/borrow.html', context)
+
+
+def borrow_details(request, pk):
+    borrow_receipt = BorrowReceipt.objects.get(id=pk)
+
+    context = {'borrow_receipt': borrow_receipt}
+
+    return render(request, 'books/borrow_details.html', context)
 
 
 def return_book(request, pk):

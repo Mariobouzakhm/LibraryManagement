@@ -1,4 +1,5 @@
 {% extends 'books/main_template.html' %}
+{% load crispy_forms_filters %}
 
 {% block title %}Main Page{% endblock %}
 
@@ -10,17 +11,32 @@
             margin: 1% auto;
         }
 
+        .card1 {
+            background-color: #D3D3D3;
+        }
 
-        .sandro {
-            background-color: #8b15e6
+        .card2 {
+            background-color: #A9A9A9;
+        }
+
+        .card3 {
+            background-color: #808080;
+        }
+
+        .full-card {
+            height: 100%;
+        }
+
+        .full-row {
+            margin-bottom: 10px;
         }
 
     </style>
 
     <div class="card-content">
-        <div class="row">
+        <div class="row full-row">
             <div class="col">
-                <div class="card bg-info text-white">
+                <div class="card card1 text-white full-card">
                     <div class="card-header text-center">
                         <h5>Number of Books/Editions</h5>
 
@@ -32,7 +48,7 @@
             </div>
 
             <div class="col">
-                <div class="card sandro text-white">
+                <div class="card card2 text-white full-card">
                     <div class="card-header text-center">
                         <h5>Number of Books Borrowed</h5>
                     </div>
@@ -43,7 +59,7 @@
             </div>
 
             <div class="col">
-                <div class="card bg-info text-white">
+                <div class="card card3 text-white full-card">
                     <div class="card-header text-center ">
                         <h5>Number of Books Due Today</h5>
                     </div>
@@ -51,6 +67,19 @@
                         <h4>{{ due_today }}</h4>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="card card-body">
+                <form action="" method="GET">
+                    {% csrf_token %}
+
+                    {{ renew_form.book_edition_id.label }}
+                    {{ renew_form.book_edition_id }}
+
+                    <input type="submit" class="btn btn-primary" name="Search" value="Search">
+                </form>
             </div>
         </div>
     </div>

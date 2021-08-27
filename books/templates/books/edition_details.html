@@ -1,0 +1,70 @@
+{% extends 'books/main_template.html' %}
+
+{% block title %}Edition #{{ edition.id }}{% endblock %}
+
+{% block content %}
+
+    <br>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-2">
+                <div class="card">
+                    <img class="card-img" src="{{ edition.book.book_cover.url }}" alt="Book Cover">
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Title: {{ edition.book.title }}</h6>
+                        <h6>ISBN: {{ edition.ISBN }}</h6>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Authors: {{ edition.book.authors.all|join:", " }}</h6>
+                        <h6>Categories: {{ edition.book.categories.all|join:", " }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <h3>Borrow Receipts: </h3>
+
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Date Borrowed</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for receipt in borrow_receipts %}
+                        <tr>
+                            <td>{{ receipt.id }}</td>
+                            <td>{{ receipt.date_borrowed }}</td>
+                            {% if book.return_receipt == None %}
+                                <td>BORROWED</td>
+                            {% else %}
+                                <td>RETURNED</td>
+                            {% endif %}
+                            <td><a href="{% url 'borrow_details' receipt.id %}" class="btn btn-success">Details</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

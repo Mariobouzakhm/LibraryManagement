@@ -1,0 +1,40 @@
+{% extends 'books/main_template.html' %}
+
+{% block title %}Borrow #{{ borrow_receipt.id }}{% endblock %}
+
+{% block content %}
+
+    <style>
+        .full-width {
+            width: 100%;
+        }
+    </style>
+
+    <br>
+
+    <div class="container">
+        <div class="row">
+            <div class="card full-width">
+                <div class="card-body">
+                    <ul>
+                        <h5>Borrow #: {{ borrow_receipt.id }}</h5>
+                        <h5>Book Title: {{ borrow_receipt.book_edition.book.title }}</h5>
+                        <h5>Book ISBN: {{ borrow_receipt.book_edition.ISBN }}</h5>
+                        <h5>Date Borrowed: {{ borrow_receipt.date_borrowed }}</h5>
+                        <h5>Date to Return: {{ borrow_receipt.date_to_return }}</h5>
+                        {% if borrow_receipt.return_receipt == None %}
+                            <h5>Status: Borrowed</h5>
+
+                        {% else %}
+                            <h5>Status: Returned</h5>
+                            <h5>Date Returned: {{ borrow_receipt.return_receipt.date_returned }}</h5>
+                            <h5>Damage Description: {{ borrow_receipt.return_receipt.damage_description }}</h5>
+                            <h5>Fine: {{ borrow_receipt.return_receipt.fine }}</h5>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

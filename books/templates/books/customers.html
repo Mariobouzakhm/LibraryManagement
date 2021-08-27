@@ -1,0 +1,46 @@
+{% extends 'books/main_template.html' %}
+
+{% block title %}Customers List{% endblock %}
+
+{% block content %}
+
+    <style>
+        .top-margin {
+            margin: 10px auto;
+        }
+    </style>
+
+    <div class="top-margin container">
+        <div class="row table-responsive-md">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date of Birth</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone Number</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for customer in customer_list %}
+                        <tr>
+                            <td>{{ customer.id }}</td>
+                            <td><a href="{% url 'customer_details' customer.id %}">{{ customer.first_name }} {{ customer.last_name }}</a></td>
+                            <td>{{ customer.date_of_birth }}</td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.phone }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <a href="{% url 'add_customer' %}" class="btn btn-primary">Add a Customer</a>
+        </div>
+    </div>
+
+
+{% endblock %}
