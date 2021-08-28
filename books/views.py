@@ -1,14 +1,18 @@
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.shortcuts import redirect
 
 from .filters import BookFilter
 from .models import Book, BookEdition, BorrowReceipt, Customer
 from .forms import BookForm, BorrowForm, EditionForm, ReturnForm, AuthorForm, CategoryForm\
-    , QBorrowReturnForm, CustomerForm
+    , QBorrowReturnForm, CustomerForm, CreateUserForm
 
 import datetime
 
 
+@login_required()
 def home(request):
     books_count = Book.objects.all().count()
     editions_count = BookEdition.objects.all().count()
@@ -37,6 +41,7 @@ def home(request):
     return render(request, 'books/home.html', context)
 
 
+@login_required()
 def books(request):
     book_list = Book.objects.all()
     book_filter = BookFilter(request.GET, queryset=book_list)
@@ -47,6 +52,7 @@ def books(request):
     return render(request, 'books/books.html', context)
 
 
+@login_required()
 def customers(request):
     customer_list = Customer.objects.all()
 
@@ -55,6 +61,7 @@ def customers(request):
     return render(request, 'books/customers.html', context)
 
 
+@login_required()
 def book_details(request, pk):
     book = Book.objects.get(id=pk)
     editions = book.bookedition_set.all()
@@ -63,6 +70,7 @@ def book_details(request, pk):
     return render(request, 'books/book.html', context)
 
 
+@login_required()
 def edition_details(request, pk):
     edition = BookEdition.objects.get(id=pk)
     borrow_receipts = BorrowReceipt.objects.filter(book_edition=edition)
@@ -71,6 +79,7 @@ def edition_details(request, pk):
     return render(request, 'books/edition_details.html', context)
 
 
+@login_required()
 def customer_details(request, pk):
     customer = Customer.objects.get(id=pk)
     borrowed_books = BorrowReceipt.objects.filter(customer=customer)
@@ -80,6 +89,7 @@ def customer_details(request, pk):
     return render(request, 'books/customer.html', context)
 
 
+@login_required()
 def add_book(request):
     form = BookForm()
     context = {
@@ -97,6 +107,7 @@ def add_book(request):
     return render(request, 'books/add_book.html', context)
 
 
+@login_required()
 def add_author(request):
     form = AuthorForm()
 
@@ -111,6 +122,7 @@ def add_author(request):
     return render(request, 'books/add_author.html', {'form': form})
 
 
+@login_required()
 def add_category(request):
     form = CategoryForm()
 
@@ -125,6 +137,7 @@ def add_category(request):
     return render(request, 'books/add_category.html', {'form': form})
 
 
+@login_required()
 def add_edition(request, pk):
     book = Book.objects.get(id=pk)
     form = EditionForm(initial={'book': book})
@@ -142,6 +155,7 @@ def add_edition(request, pk):
     return render(request, 'books/add_edition.html', context)
 
 
+@login_required()
 def add_customer(request):
     form = CustomerForm()
 
@@ -153,7 +167,12 @@ def add_customer(request):
 
             return redirect('home')
 
+    context = {'form': form}
 
+    return render(request, 'books/add_customer.html', context)
+
+
+@login_required()
 def borrow(request, pk):
     edition = BookEdition.objects.get(id=pk)
 
@@ -179,6 +198,7 @@ def borrow(request, pk):
     return render(request, 'books/borrow.html', context)
 
 
+@login_required()
 def borrow_details(request, pk):
     borrow_receipt = BorrowReceipt.objects.get(id=pk)
 
@@ -187,6 +207,7 @@ def borrow_details(request, pk):
     return render(request, 'books/borrow_details.html', context)
 
 
+@login_required()
 def return_book(request, pk):
     edition = BookEdition.objects.get(id=pk)
 
@@ -218,3 +239,52 @@ def return_book(request, pk):
 
     context = {'edition': edition, 'form': form, 'date_to_return': current_borrow.date_to_return}
     return render(request, 'books/return.html', context)
+
+
+def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+
+            return redirect('home')
+
+        else:
+            messages.info(request, 'Incorrect Username/Password')
+
+    context = {}
+
+    return render(request, 'books/login.html', context)
+
+
+@login_required()
+def logoutPage(request):
+    logout(request)
+
+    return redirect('login')
+
+
+@login_required()
+def registerPage(request):
+    form = CreateUserForm()
+
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+
+            messages.success(request, 'Librarian ' + username + ' added.')
+
+            return redirect('login')
+
+    context = {'form': form}
+
+    return render(request, 'books/register.html', context)
+

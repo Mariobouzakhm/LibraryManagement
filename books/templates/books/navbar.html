@@ -2,14 +2,22 @@
     <a class="navbar-brand" href="">Navbar</a>
 
     <ul class="navbar-nav">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a href="{% url 'home' %}" class="nav-link">Dashboard</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'books' %}">Books</a>
           </li>
-        <li>
+          <li class="nav-item">
             <a href="{% url 'customers' %}" class="nav-link">Customers</a>
-        </li>
+          </li>
+        {% if request.user.is_superuser %}
+            <li class="nav-item">
+                <a href="{% url 'register' %}" class="nav-link">Add Librarian</a>
+            </li>
+        {% endif %}
     </ul>
+
+    <span style="margin-left: auto; color: #999999;">Welcome, {{ request.user }}</span>
+    <span> <a href="{% url 'logout' %}" class="nav-link link-color">Logout</a></span>
 </nav>

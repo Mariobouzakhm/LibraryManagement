@@ -1,0 +1,59 @@
+{% extends 'books/main_template.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}Add Librarian{% endblock %}
+
+{% block content %}
+
+    <style>
+        .input-group-text {
+			background: white;
+			color: black;
+			border: 0;
+		}
+    </style>
+
+    <br>
+
+    <div class="container">
+        <div class="row">
+            <div class="card w-100">
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+
+                        <div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Username: </span>
+							</div>
+							{{form.username}}
+						</div>
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Password: </span>
+							</div>
+							{{form.password1}}
+
+						</div>
+                        <div class="input-group mb-3">
+                            <ul>
+                                <li>Be 8 characters long minumum.</li>
+                                <li>Contains at least 1 number, 1 special character and 1 letter.</li>
+                                <li>Does not contain the username of any easy sequences.</li>
+                            </ul>
+                        </div>
+
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Password Confirmation: </span>
+							</div>
+							{{form.password2}}
+						</div>
+
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

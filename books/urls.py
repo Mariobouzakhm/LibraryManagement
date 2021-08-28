@@ -21,5 +21,9 @@ urlpatterns = [
     path('customers/add/', views.add_customer, name='add_customer'),
     path('customers/<int:pk>/', views.customer_details, name='customer_details'),
 
-    path('borrow/details/<int:pk>', views.borrow_details, name='borrow_details')
+    path('borrow/details/<int:pk>', views.borrow_details, name='borrow_details'),
+
+    path('login/', views.loginPage, name='login'),
+    path('logout/', views.logoutPage, name='logout'),
+    path('register/', views.registerPage, name='register')
 ]
