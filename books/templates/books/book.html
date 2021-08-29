@@ -1,24 +1,35 @@
 {% extends 'books/main_template.html' %}
+{% load static %}
 {% block title %}{{ book.title }}{% endblock %}
 
 {% block content %}
 
     <style>
-        .card-content {
+        .container {
             width: 80%;
             margin: 1% auto;
         }
+
+
+        .row-top {
+            max-height: 25% !important;
+            height: auto;
+        }
+
+        img {
+            max-height: 100%;
+            max-width: 100%;
+        }
+
 
     </style>
 
     <br>
 
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center row-top">
             <div class="col-sm-2">
-                <div class="card">
-                    <img class="card-img" src="{{ book.book_cover.url }}" alt="Book Cover">
-                </div>
+                <img class="card-img" src="{{ book.book_cover.url }}">
             </div>
 
             <div class="col-sm-5">
@@ -78,36 +89,4 @@
             <a class='btn btn-info' href="{% url 'add_edition' book.id%}">Add Edition</a>
         </div>
     </div>
-
-
-
-
-{#    <div class="card-content">#}
-{#        <div class="row">#}
-{#            <div class="col-sm-4">#}
-{#                <div class="card">#}
-{#                    <img class="card-img" src="{{ book.book_cover.url }}" alt="Book Cover">#}
-{#                </div>#}
-{#            </div>#}
-{##}
-{#            <div class="col-sm-4">#}
-{#                <div class="card">#}
-{#                    <div class="card-body">#}
-{#                        <h6>Title: {{ book.title }}</h6>#}
-{#                        <h6>Date Published: {{ book.date_published }}</h6>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{##}
-{#            <div class="col-sm-4">#}
-{#                <div class="card">#}
-{#                    <div class="card-body">#}
-{#                        <h6>Authors: {{ book.authors|join:", " }}</h6>#}
-{#                        <h6>Categories: {{ book.categories|join:", " }}</h6>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-
 {% endblock %}

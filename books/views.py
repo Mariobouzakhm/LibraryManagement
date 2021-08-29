@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.db import connection
 
 from .filters import BookFilter
 from .models import Book, BookEdition, BorrowReceipt, Customer
@@ -17,12 +18,21 @@ def home(request):
     books_count = Book.objects.all().count()
     editions_count = BookEdition.objects.all().count()
     books_borrowed = BorrowReceipt.objects.all().filter(return_receipt=None).count()
-    due_today = BorrowReceipt.objects.all().filter(date_to_return=datetime.date.today()).count()
+    due_today = BorrowReceipt.objects.all().filter(date_to_return=datetime.date.today())
+    due_today_count = due_today.count()
 
     borrow_return_form = QBorrowReturnForm()
 
+    cursor = connection.cursor()
+    cursor.execute('''Select COUNT(customer_id) AS 'Count', customer_id, books_customer.first_name, 
+    books_customer.last_name From books_borrowreceipt INNER JOIN books_customer 
+    ON books_borrowreceipt.customer_id = books_customer.id GROUP BY(customer_id)''')
+
+    rows = cursor.fetchall()
+
     context = {'books_count': books_count, 'editions_count': editions_count, 'borrowed_count': books_borrowed,
-               'due_today': due_today, 'renew_form': borrow_return_form}
+               'due_today': due_today_count, 'renew_form': borrow_return_form, 'borrows_today': due_today,
+               'borrows_by_cust': rows}
 
     if request.method == 'GET':
         borrow_return_form = QBorrowReturnForm(request.GET)

@@ -6,7 +6,7 @@
 {% block content %}
 
     <style>
-        .card-content {
+        .container {
             width: 80%;
             margin: 1% auto;
         }
@@ -31,9 +31,13 @@
             margin-bottom: 10px;
         }
 
+        .top-margin {
+            margin-top: 20px;
+        }
+
     </style>
 
-    <div class="card-content">
+    <div class="container">
         <div class="row full-row">
             <div class="col">
                 <div class="card card1 text-white full-card">
@@ -80,6 +84,55 @@
 
                     <input type="submit" class="btn btn-primary" name="Search" value="Search">
                 </form>
+            </div>
+        </div>
+
+        <div class="row top-margin">
+            <div class="col-md-6">
+                <h5>Number of Borrows Per Customer</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Customer #</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Number of Books</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cust in borrows_by_cust %}
+                            <tr>
+                                <td>{{ cust.1 }}</td>
+                                <td>{{ cust.2 }} {{ cust.3 }}</td>
+                                <td>{{ cust.0 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <h5>Books Due Today</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">ISBN</th>
+                            <th scope="col">Customer</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for borrow in borrows_today %}
+                            <tr>
+                                <td>{{ borrow.book_edition.id }}</td>
+                                <td>{{ borrow.book_edition.book.title }}</td>
+                                <td>{{ borrow.book_edition.ISBN }}</td>
+                                <td>{{ borrow.customer.first_name }} {{ borrow.customer.last_name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
