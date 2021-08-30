@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'phonenumber_field',
     'django_filters',
+    'django_heroku',
 
     'books.apps.BooksConfig'
 ]
